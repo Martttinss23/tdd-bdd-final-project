@@ -23,12 +23,14 @@ While debugging just these tests it's convenient to use this:
     nosetests --stop tests/test_models.py:TestProductModel
 
 """
-import os
 import logging
+import os
 import unittest
+
 from decimal import Decimal
-from service.models import Product, Category, db
+
 from service import app
+from service.models import db, Category, Product
 from tests.factories import ProductFactory
 
 DATABASE_URI = os.getenv(
