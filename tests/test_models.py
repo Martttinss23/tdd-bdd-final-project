@@ -30,7 +30,7 @@ import unittest
 from decimal import Decimal
 
 from service import app
-from service.models import db, Category, Product
+from service.models import db, Category, DataValidationError, Product
 from tests.factories import ProductFactory
 
 DATABASE_URI = os.getenv(
@@ -152,6 +152,14 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(products[0].id, original_id)
         self.assertEqual(products[0].description, new_description_str)
 
+    def test_invalid_id_when_updating(self):
+        """ Test invalid ID update """
+        # Acceptance Criteria to fulfil 95% coverage -> line 106 in service/models.py
+        product = ProductFactory()
+        product.create()
+        product.id = None
+        self.assertRaises(DataValidationError, product.update)
+
     def test_delete_a_product(self):
         """It should Delete a Product"""
         # 1.Create a Product object using the ProductFactory and save it to the database.
@@ -234,3 +242,26 @@ class TestProductModel(unittest.TestCase):
         # 6.Assert that each product's category matches the expected category.
         for product in found_products:
             self.assertEqual(product.category, product_category)
+
+    def test_invalid_availability_when_deserializing(self):
+        """ Test invalid availability deserialize """
+        # Acceptance Criteria to fulfil 95% coverage -> line 139 in service/models.py
+        product = ProductFactory()
+        product.available = "not boolean value"
+        data = product.serialize()
+        with self.assertRaises(DataValidationError):
+            product.deserialize(data)
+
+    def test_find_product_by_price(self):
+        """It should Find Products by Price"""
+        # Acceptance Criteria to fulfil 95% coverage -> lines 217-221 in service/models.py
+        nr_products = 10
+        products = ProductFactory.create_batch(nr_products)
+        for product in products:
+            product.create()
+        product_price = products[0].price
+        nr_ocurrences = len([product for product in products if product.price == product_price])
+        found_products = Product.find_by_price(str(product_price))
+        self.assertEqual(found_products.count(), nr_ocurrences)
+        for product in found_products:
+            self.assertEqual(product.price, product_price)
