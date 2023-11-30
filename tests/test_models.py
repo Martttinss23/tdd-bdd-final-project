@@ -149,3 +149,15 @@ class TestProductModel(unittest.TestCase):
         # 8.Assert that the fetched product has the original id but updated description.
         self.assertEqual(products[0].id, original_id)
         self.assertEqual(products[0].description, new_description_str)
+
+    def test_delete_a_product(self):
+        """It should Delete a Product"""
+        # 1.Create a Product object using the ProductFactory and save it to the database.
+        product = ProductFactory()
+        # 2.Assert that after creating a product and saving it to the database, there is only one product in the system.
+        product.create()
+        self.assertEqual(len(Product.all()), 1)
+        # 3.Remove the product from the database.
+        product.delete()
+        # 4.Assert if the product has been successfully deleted from the database.
+        self.assertEqual(len(Product.all()), 0)
