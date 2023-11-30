@@ -121,3 +121,31 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(found_product.price, product.price)
         self.assertEqual(found_product.available, product.available)
         self.assertEqual(found_product.category, product.category)
+
+    def test_update_a_product(self):
+        """It should Update a Product"""
+        # 1.Create a Product object using the ProductFactory
+        product = ProductFactory()
+        # 2.Add a log message displaying the product for debugging errors
+        app.logger.debug(str(product))
+        # 3. Set the ID of the product object to None and create the product.
+        product.id = None
+        product.create()
+        # 4.Log the product object again after it has been created to verify
+        #  that the product was created with the desired properties.
+        app.logger.debug(str(product))
+        # 5.Update the description property of the product object.
+        new_description_str = "New description"
+        product.description = new_description_str
+        original_id = product.id
+        product.update()
+        # 6.Assert that that the id and description properties of the product object have been updated correctly.
+        self.assertEqual(product.id, original_id)
+        self.assertEqual(product.description, new_description_str)
+        # 7.Fetch all products from the database to verify that after updating the product,
+        #  there is only one product in the system.
+        products = Product.all()
+        self.assertEqual(len(products), 1)
+        # 8.Assert that the fetched product has the original id but updated description.
+        self.assertEqual(products[0].id, original_id)
+        self.assertEqual(products[0].description, new_description_str)
