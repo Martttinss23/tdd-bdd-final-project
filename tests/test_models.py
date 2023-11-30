@@ -175,3 +175,22 @@ class TestProductModel(unittest.TestCase):
             product.create()
         # 4.Fetching all products from the database again and assert the count is 5
         self.assertEqual(len(Product.all()), nr_products)
+
+    def test_find_product_by_name(self):
+        """It should Find a Product by Name"""
+        # 1.Create a batch of 5 Product objects using the ProductFactory and save them to the database.
+        nr_products = 5
+        products = ProductFactory.create_batch(nr_products)
+        for product in products:
+            product.create()
+        # 2.Retrieve the name of the first product in the products list
+        product_name = products[0].name
+        # 3.Count the number of occurrences of the product name in the list
+        nr_ocurrences = len([product for product in products if product.name == product_name])
+        # 4.Retrieve products from the database that have the specified name.
+        found_products = Product.find_by_name(product_name)
+        # 5.Assert if the count of the found products matches the expected count.
+        self.assertEqual(found_products.count(), nr_ocurrences)
+        # 6.Assert that each product’s name matches the expected name.
+        for product in found_products:
+            self.assertEqual(product.name, product_name)
