@@ -161,3 +161,17 @@ class TestProductModel(unittest.TestCase):
         product.delete()
         # 4.Assert if the product has been successfully deleted from the database.
         self.assertEqual(len(Product.all()), 0)
+
+    def test_list_all_products(self):
+        """It should List all Products"""
+        # 1.Retrieve all products from the database and assign them to the products variable.
+        products = Product.all()
+        # 2.Assert there are no products in the database at the beginning of the test case.
+        self.assertEqual(len(products), 0)
+        # 3.Create five products and save them to the database.
+        nr_products = 5
+        for _ in range(nr_products):
+            product = ProductFactory()
+            product.create()
+        # 4.Fetching all products from the database again and assert the count is 5
+        self.assertEqual(len(Product.all()), nr_products)
