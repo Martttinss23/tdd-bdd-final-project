@@ -19,7 +19,8 @@ Test Factory to make fake objects for testing
 """
 from factory import Factory, Faker, Sequence
 from factory.fuzzy import FuzzyChoice, FuzzyDecimal
-from service.models import Product, Category
+
+from service.models import Category, Product
 
 
 class ProductFactory(Factory):
@@ -27,7 +28,6 @@ class ProductFactory(Factory):
 
     class Meta:
         """Maps factory to data model"""
-
         model = Product
 
     id = Sequence(lambda n: n)
