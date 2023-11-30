@@ -17,7 +17,7 @@
 """
 Test Factory to make fake objects for testing
 """
-from factory import Factory, Sequence
+from factory import Factory, Faker, Sequence
 from factory.fuzzy import FuzzyChoice, FuzzyDecimal
 from service.models import Product, Category
 
@@ -38,3 +38,4 @@ class ProductFactory(Factory):
         "Ferrari", "Seat", "BMW", "Mercedes",
         "Screwdriver", "Saw", "Drill", "Sandpaper"
     ])
+    description = Faker("text")
