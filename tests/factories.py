@@ -39,3 +39,6 @@ class ProductFactory(Factory):
         "Screwdriver", "Saw", "Drill", "Sandpaper"
     ])
     description = Faker("text")
+    price = FuzzyDecimal(0.5, 500.0, 2)
+    available = FuzzyChoice(choices=[True, False])
+    category = FuzzyChoice(choices=list(Category))
